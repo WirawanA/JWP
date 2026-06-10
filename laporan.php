@@ -70,7 +70,7 @@ $data_laporan = mysqli_query($conn, $query_laporan);
 </style>
 
 <div class="print-header text-center mb-4 border-bottom pb-3">
-    <h2 class="fw-bold m-0">WARUNG KELONTONG JEWEPE</h2>
+    <h2 class="fw-bold m-0">WARUNG KELONTONG</h2>
     <p class="m-0 text-muted">Laporan Rekapitulasi Mutasi Keluar Masuk Barang</p>
     <small class="fw-bold">Periode: <?= date('d/m/Y', strtotime($tgl_mulai)); ?> s/d <?= date('d/m/Y', strtotime($tgl_selesai)); ?></small>
 </div>
@@ -78,9 +78,15 @@ $data_laporan = mysqli_query($conn, $query_laporan);
 <div class="d-flex justify-content-between align-items-center pt-3 pb-2 mb-3 border-bottom">
     <h1 class="h2 fw-bold text-dark m-0">Laporan Mutasi Barang</h1>
     
-    <button onclick="window.print()" class="btn btn-success btn-print fw-bold shadow-sm">
-        🖨️ Cetak Laporan / PDF
-    </button>
+    <div class="d-flex gap-2 no-print">
+        <button onclick="window.print()" class="btn btn-success fw-bold rounded shadow-sm">
+            🖨️ Cetak Laporan / PDF
+        </button>
+        
+        <button onclick="exportExcelMutasi()" class="btn btn-primary fw-bold rounded shadow-sm">
+            📊 Cetak Excel
+        </button>
+    </div>
 </div>
 
 <div class="card border-0 shadow-sm mb-4 filter-box">
@@ -143,5 +149,18 @@ $data_laporan = mysqli_query($conn, $query_laporan);
         </div>
     </div>
 </div>
+<script>
+function exportExcelMutasi() {
+    // Mencari tabel di halaman
+    var table = document.querySelector(".table");
+    
+    // Mengubah tabel menjadi format Excel
+    var wb = XLSX.utils.table_to_book(table, {sheet: "Laporan Mutasi"});
+    
+    // Proses download file
+    XLSX.writeFile(wb, 'Laporan_Mutasi_Warung.xlsx');
+}
+</script>
 
+<?php include 'includes/footer.php'; ?>
 <?php include 'includes/footer.php'; ?>

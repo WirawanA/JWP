@@ -1,16 +1,35 @@
 <?php 
+// 1. Memanggil komponen header yang berisi konfigurasi database, proteksi session (login), dan kerangka awal HTML/Bootstrap.
 include 'includes/header.php'; 
 
+// =========================================================================
+// --- 1. PROSES PENGAMBILAN DATA STATISTIK (QUERIES) UTK DASHBOARD ---
+// =========================================================================
+
+// 2. MENGHITUNG TOTAL VARIAN PRODUK
+// mysqli_query menjalankan kueri, lalu mysqli_num_rows menghitung jumlah baris/record yang ada di tabel 'products'.
 $total_barang = mysqli_num_rows(mysqli_query($conn, "SELECT id FROM products"));
 
+// 3. MENGAMBIL TANGGAL HARI INI
+// Fungsi date('Y-m-d') menghasilkan format tahun-bulan-tanggal saat ini (contoh: 2026-06-05) untuk filter kueri.
 $hari_ini = date('Y-m-d');
 
+// 4. MENGHITUNG TOTAL BARANG MASUK HARI INI
+// Menggunakan fungsi agregasi SQL 'SUM(quantity)' untuk menjumlahkan semua angka di kolom kuantitas.
+// Difilter dengan WHERE tipe mutasinya 'masuk' DAN tanggalnya adalah hari ini.
 $masuk = mysqli_fetch_assoc(mysqli_query($conn, "SELECT SUM(quantity) as total FROM stock_mutations WHERE type='masuk' AND date='$hari_ini'"));
 
+// 5. MENGHITUNG TOTAL BARANG KELUAR HARI INI
+// Sama seperti di atas, namun untuk menghitung barang yang keluar pada hari ini.
 $keluar = mysqli_fetch_assoc(mysqli_query($conn, "SELECT SUM(quantity) as total FROM stock_mutations WHERE type='keluar' AND date='$hari_ini'"));
 
+// 6. KUERI STOK TERTINGGI (TOP 3)
+// ORDER BY stock DESC = Mengurutkan data dari jumlah stok yang paling besar ke yang terkecil.
+// LIMIT 3 = Membatasi hasil yang diambil dari database hanya 3 baris teratas saja.
 $stok_tertinggi_query = mysqli_query($conn, "SELECT id, product_name, stock, unit FROM products WHERE stock > 0 ORDER BY stock DESC LIMIT 3");
 
+// 7. KUERI PERINGATAN STOK RENDAH (KRITIS)
+// Mengambil semua data barang yang jumlah stoknya kurang dari (<) 10 unit.
 $stok_rendah_query = mysqli_query($conn, "SELECT id, product_name, stock, unit FROM products WHERE stock < 10");
 ?>
 
@@ -62,7 +81,7 @@ $stok_rendah_query = mysqli_query($conn, "SELECT id, product_name, stock, unit F
                         <table class="table table-hover align-middle m-0">
                             <thead class="table-light">
                                 <tr>
-                                    <th>Nama Barang Kelontong</th>
+                                    <th>Nama Barang</th>
                                     <th>Sisa Kuantitas</th>
                                     <th class="text-center" width="25%">Aksi</th>
                                 </tr>
@@ -102,13 +121,14 @@ $stok_rendah_query = mysqli_query($conn, "SELECT id, product_name, stock, unit F
                         <table class="table table-hover align-middle m-0">
                             <thead class="table-light">
                                 <tr>
-                                    <th>Nama Barang Kelontong</th>
+                                    <th>Nama Barang</th>
                                     <th>Jumlah Kuantitas</th>
                                     <th class="text-center" width="25%">Status</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <?php 
+                                // Membuat variabel penghitung untuk mencetak nomor peringkat (Rank)
                                 $rank = 1;
                                 while($row = mysqli_fetch_assoc($stok_tertinggi_query)): 
                                 ?>
@@ -136,5 +156,6 @@ $stok_rendah_query = mysqli_query($conn, "SELECT id, product_name, stock, unit F
 </div>
 
 <?php 
+// 11. Memanggil footer untuk menutup tag HTML yang terbuka dan memuat script JavaScript Bootstrap.
 include 'includes/footer.php'; 
 ?>

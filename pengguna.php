@@ -100,7 +100,7 @@ $users = mysqli_query($conn, "SELECT id, name, role FROM users");
                 <form action="" method="POST">
                     <div class="mb-3">
                         <label class="form-label small fw-bold">Username</label>
-                        <input type="text" name="name" class="form-control" required placeholder="Contoh: kasir_jwp">
+                        <input type="text" name="name" class="form-control" required placeholder="Contoh: kasir">
                     </div>
                     <div class="mb-3">
                         <label class="form-label small fw-bold">Password</label>

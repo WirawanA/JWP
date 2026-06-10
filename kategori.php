@@ -106,7 +106,7 @@ $categories = mysqli_query($conn, "SELECT * FROM categories");
                         <thead class="table-light">
                             <tr>
                                 <th width="15%">ID Kategori</th>
-                                <th>Nama Kategori Komoditas</th>
+                                <th>Nama Kategori</th>
                                 <th width="25%" class="text-center">Aksi</th>
                             </tr>
                         </thead>
