@@ -2,6 +2,17 @@
 include 'includes/header.php'; 
 
 // =========================================================================
+// --- KEAMANAN LAPIS DUA: BLOKIR AKSES STAFF ---
+// =========================================================================
+// Jika tidak ada session role, ATAU rolenya BUKAN 'Admin Utama', tendang ke dashboard!
+if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'Admin Utama') {
+    echo "<script>
+            alert('⛔ AKSES DITOLAK! Hanya Admin Utama yang memiliki akses ke halaman Manajemen Pengguna.');
+            window.location.href = 'dashboard.php';
+          </script>";
+    exit; // Wajib ada exit agar sisa kode di bawah tidak dieksekusi oleh browser.
+}
+// =========================================================================
 // --- 1. PROSES LOGIKA PHP ---
 // =========================================================================
 
